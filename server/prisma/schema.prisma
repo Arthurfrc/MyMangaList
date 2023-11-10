@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id    String  @id @default(uuid())
+  name  String?
+  email String?
+}
+
+model Manga {
+  id        String @id @default(uuid())
+  name      String
+  numbersId String
+
+  total_cap Numbers    @relation(fields: [numbersId], references: [id])
+  Chapters  Chapters[]
+}
+
+model Numbers {
+  id     String @id @default(uuid())
+  number Int
+
+  Manga    Manga[]
+  Chapters Chapters[]
+}
+
+model Chapters {
+  numbersId String
+  mangaId   String
+  check     Boolean @default(false)
+
+  number Numbers @relation(fields: [numbersId], references: [id])
+  name   Manga   @relation(fields: [mangaId], references: [id])
+
+  @@unique([numbersId, mangaId])
+}
