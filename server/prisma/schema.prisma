@@ -10,36 +10,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Person {
+model User {
   id    String  @id @default(uuid())
-  name  String?
+  name  String
   email String?
+
+  Read_Chapters Read_Chapters[]
+  User_Manga    User_Manga[]
 }
 
 model Manga {
-  id        String @id @default(uuid())
-  name      String
-  numbersId String
+  id    String  @id @default(uuid())
+  name  String
+  link  String?
+  total Int
 
-  total_cap Numbers    @relation(fields: [numbersId], references: [id])
-  Chapters  Chapters[]
-}
-
-model Numbers {
-  id     String @id @default(uuid())
-  number Int
-
-  Manga    Manga[]
-  Chapters Chapters[]
+  Read_Chapters Read_Chapters[]
+  User_Manga    User_Manga[]
 }
 
 model Chapters {
-  numbersId String
-  mangaId   String
-  check     Boolean @default(false)
+  id     String @id @default(uuid())
+  number String
+}
 
-  number Numbers @relation(fields: [numbersId], references: [id])
-  name   Manga   @relation(fields: [mangaId], references: [id])
+model User_Manga {
+  id      String @id @default(uuid())
+  userId  String
+  mangaId String
 
-  @@unique([numbersId, mangaId])
+  user  User  @relation(fields: [userId], references: [id])
+  manga Manga @relation(fields: [mangaId], references: [id])
+
+  @@unique([userId, mangaId])
+}
+
+model Read_Chapters {
+  id             String  @id @default(uuid())
+  userId         String
+  mangaId        String
+  number_chapter Int
+  read           Boolean @default(false)
+
+  user  User  @relation(fields: [userId], references: [id])
+  manga Manga @relation(fields: [mangaId], references: [id])
+
+  @@unique([mangaId, userId, number_chapter])
 }
