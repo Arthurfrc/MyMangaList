@@ -2,58 +2,24 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
+}
+
+generator erd {
+    provider = "prisma-erd-generator"
+    theme    = "forest"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id    String  @id @default(uuid())
-  name  String
-  email String?
-
-  Read_Chapters Read_Chapters[]
-  User_Manga    User_Manga[]
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 model Manga {
-  id    String  @id @default(uuid())
-  name  String
-  link  String?
-  total Int
-
-  Read_Chapters Read_Chapters[]
-  User_Manga    User_Manga[]
-}
-
-model Chapters {
-  id     String @id @default(uuid())
-  number String
-}
-
-model User_Manga {
-  id      String @id @default(uuid())
-  userId  String
-  mangaId String
-
-  user  User  @relation(fields: [userId], references: [id])
-  manga Manga @relation(fields: [mangaId], references: [id])
-
-  @@unique([userId, mangaId])
-}
-
-model Read_Chapters {
-  id             String  @id @default(uuid())
-  userId         String
-  mangaId        String
-  number_chapter Int
-  read           Boolean @default(false)
-
-  user  User  @relation(fields: [userId], references: [id])
-  manga Manga @relation(fields: [mangaId], references: [id])
-
-  @@unique([mangaId, userId, number_chapter])
+    id       Int     @id @default(autoincrement())
+    name     String
+    link     String?
+    startC   Int?    @default(1)
+    lastC    Int?    @default(1)
+    lastRead Int?    @default(1)
 }

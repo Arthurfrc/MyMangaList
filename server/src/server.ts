@@ -1,20 +1,20 @@
-import fastify from 'fastify'
-import cors from 
-import { PrismaClient } from '@prisma/client'
+import 'dotenv/config'
+import Fastify from 'fastify'
+import { mangasRoutes } from './routes/manga.routes'
 
-const app = fastify()
-const prisma = new PrismaClient()
+async function bootstrap () {
+  const fastify = Fastify({ logger: true })
 
-app.get('/listar', async () => {
-	const lista = await prisma.manga.count()
+  await fastify.register(mangasRoutes)
 
-  return lista
-})
+  await fastify
+    .listen({
+      port: 3333,
+      host: '0.0.0.0'
+    })
+    .then(() => {
+      'Listening on port 3333'
+    })
+}
 
-app
-  .listen({
-    port: 3333
-  })
-  .then(() => {
-    console.log('HTTP server running!')
-  })
+bootstrap()
