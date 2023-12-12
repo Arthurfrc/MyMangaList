@@ -19,7 +19,5 @@ model Manga {
     id       Int     @id @default(autoincrement())
     name     String
     link     String?
-    startC   Int?    @default(1)
-    lastC    Int?    @default(1)
     lastRead Int?    @default(1)
 }
