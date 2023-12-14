@@ -16,8 +16,9 @@ datasource db {
 }
 
 model Manga {
-    id       Int     @id @default(autoincrement())
+    id       Int      @id @default(autoincrement())
     name     String
     link     String?
-    lastRead Int?    @default(1)
+    lastRead Int?     @default(1)
+    status   Boolean? @default(false)
 }
